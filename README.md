@@ -25,8 +25,12 @@ $ python main.py
 ```
 `-- src  
     |-- Models                     # 資料層
-    |  |-- dbModel.py               # 資料庫基底
+    |  |-- dbModel.py               # 基礎模型
     |  |-- CSVModel.py              # CSV資料庫
+    |  |-- UserModel.py             # 用戶模型
+    |-- Repository                 # 倉儲層
+    |  |-- BaseRepository.py        # 基礎倉儲
+    |  |-- SQLiteRepository.py      # SQLite 資料倉儲
     |-- Services                   # 服務層
     |  |-- MessageHandler.py        # 服務基底
     |  |-- HelpHandler.py           # 幫助我服務

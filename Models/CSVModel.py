@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
-
 from Models.dbModel import dbModel
 
 # CSV 資料庫
@@ -10,11 +9,8 @@ class CSVModel(dbModel):
     def __init__(self):
         super().__init__()
 
-    #取得使用者名稱
-    def getUser(self,userID):
-        if userID == 1092487471:
-            return "Aaron"
-        return "Guest"
+    def initTable(self):
+        return NotImplemented
 
     #取得股票基本資訊
     def getStock(self,stockID):

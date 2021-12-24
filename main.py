@@ -14,6 +14,16 @@ bot = telebot.TeleBot(API_TOKEN)
 # 初始提示訊息
 def start_executor(message):
     helpHandler = HelpHandler()
+
+    #確認使用者是否存在
+    isUserExist = HelpHandler.CheckUserExist(message.from_user.id)
+    if isUserExist:
+        #若存在 更新使用者資訊
+        helpHandler.UpdateUserInfo(message)
+    else:
+        #若不存在 新增使用者
+        helpHandler.RegisterUser(message)
+    
     bot.send_message(message.chat.id,  helpHandler.getMessage(message.from_user.id))
 
 # 查詢股票基本資訊
