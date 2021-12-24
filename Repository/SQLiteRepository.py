@@ -45,7 +45,7 @@ class SQLiteRepository(BaseRepository):
         dataArray: 資料欄位，依照?順序將資料放入其中 
                     例如: ('ABC')
         Returns: 
-                  Array 查詢的資料集 
+                  Array<Tuple> 查詢的資料集 
         """
         # 拿到資料庫查詢指標
         conn = self.getConn()
@@ -78,9 +78,31 @@ class SQLiteRepository(BaseRepository):
         rows = c.fetchall()
         return rows
 
-    def insert_sql(self,InsertQueryStr,dataArray):
+    def insert_sql(self,InsertQueryStr,data):
         """ 
         新增資料
+        InsertQueryStr: 新增資料的語法，資料欄位請用?代替以避免SQL injection
+                        例如: insert into user(username, password) values(?, ?);
+        data: 資料欄位，依照?順序將資料放入其中 
+                    例如: ('user','pwd')
+        Returns: 
+                    rows Integer 成功的資料列數 
+        """
+        # 拿到資料庫查詢指標
+        conn = self.getConn()
+        c = conn.cursor()
+
+        # 執行寫入
+        c.execute(InsertQueryStr,data)
+        conn.commit()
+
+        # 查詢有多少ROW在上一次操作時受到影響
+        rows = c.fetchall()
+        return rows
+
+    def insert_many_sql(self,InsertQueryStr,dataArray):
+        """ 
+        新增多筆資料
         InsertQueryStr: 新增資料的語法，資料欄位請用?代替以避免SQL injection
                         例如: insert into user(username, password) values(?, ?);
         dataArray: 資料欄位，依照?順序將資料放入其中 
@@ -93,7 +115,7 @@ class SQLiteRepository(BaseRepository):
         c = conn.cursor()
 
         # 執行寫入
-        c.execute(InsertQueryStr,dataArray)
+        c.executemany(InsertQueryStr,dataArray)
         conn.commit()
 
         # 查詢有多少ROW在上一次操作時受到影響

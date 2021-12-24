@@ -12,18 +12,6 @@ class CSVModel(dbModel):
     def initTable(self):
         return NotImplemented
 
-    #取得股票基本資訊
-    def getStock(self,stockID):
-        return {
-            '1101': '1101-台泥',
-            '1102': '1102-亞泥',
-            '1103': '1103-嘉泥',
-            '1104': '1104-環泥',
-            '1107': '1107-建台',
-            '1109': '1109-信大',
-            '1110': '1110-東泥',
-        }.get(stockID,'NotFound')
-
     #取得大盤資訊
     def getTWStock(self):
         return """\

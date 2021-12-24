@@ -19,26 +19,26 @@ class UserModel(dbModel):
     def getUser(self,userID):
         "取得使用者帳號"
         queryStr = f"select * from {self.TABLENAME} where id=?"
-        dataArray = (userID,)
-        return self.repo.query_one_sql(queryStr,dataArray)
+        data = (userID,)
+        return self.repo.query_one_sql(queryStr,data)
 
     def getUserByTelegramID(self,telegramID):
         "取得使用者帳號"
         queryStr = f"select * from {self.TABLENAME} where telegramID=?"
-        dataArray = (telegramID,)
-        return self.repo.query_one_sql(queryStr,dataArray)
+        data = (telegramID,)
+        return self.repo.query_one_sql(queryStr,data)
 
     def AddUser(self,dataDict):
         "建立使用者帳號"
         queryStr = f"Insert into {self.TABLENAME}(name,telegramID,createtime) Values(?,?,?);"
-        dataArray = (dataDict['name'],dataDict['telegramID'],datetime.datetime.now())
-        return self.repo.insert_sql(queryStr,dataArray)
+        data = (dataDict['name'],dataDict['telegramID'],datetime.datetime.now())
+        return self.repo.insert_sql(queryStr,data)
 
     def UpdateUserName(self,dataDict):
         "更新使用者名稱"
         queryStr = f"Update {self.TABLENAME} set name=? where userID=?;"
-        dataArray = (dataDict['name'],dataDict['id'])
-        return self.repo.update_sql(queryStr,dataArray)  
+        data = (dataDict['name'],dataDict['id'])
+        return self.repo.update_sql(queryStr,data)  
 
     def initTable(self):
         "初始化資料表"

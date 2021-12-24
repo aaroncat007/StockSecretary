@@ -28,7 +28,12 @@ class BaseRepository(metaclass=ABCMeta):
 
     # 新增資料語法
     @abstractmethod
-    def insert_sql(self,InsertQueryStr,dataArray):
+    def insert_sql(self,InsertQueryStr,data):
+        pass
+
+    # 新增多筆資料語法
+    @abstractmethod
+    def insert_many_sql(self,InsertQueryStr,dataArray):
         pass
 
     # 刪除資料語法
