@@ -13,6 +13,8 @@ There are two ways to install the library:
 
 ```
 $ pip install pyTelegramBotAPI
+$ pip install pandas
+$ pip install lxml
 ```
 
 * Run Start:
