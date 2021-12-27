@@ -75,7 +75,7 @@ class SQLiteRepository(BaseRepository):
         conn.commit()
 
         # 查詢有多少ROW在上一次操作時受到影響
-        rows = c.fetchall()
+        rows = c.rowcount
         return rows
 
     def insert_sql(self,InsertQueryStr,data):
@@ -97,7 +97,7 @@ class SQLiteRepository(BaseRepository):
         conn.commit()
 
         # 查詢有多少ROW在上一次操作時受到影響
-        rows = c.fetchall()
+        rows = c.rowcount
         return rows
 
     def insert_many_sql(self,InsertQueryStr,dataArray):
@@ -119,7 +119,7 @@ class SQLiteRepository(BaseRepository):
         conn.commit()
 
         # 查詢有多少ROW在上一次操作時受到影響
-        rows = c.fetchall()
+        rows = c.rowcount
         return rows
 
     def delete_sql(self,deleteQueryStr,dataArray):
@@ -141,5 +141,6 @@ class SQLiteRepository(BaseRepository):
         conn.commit()
 
         # 查詢有多少ROW在上一次操作時受到影響
-        rows = c.fetchall()
+        rows = c.rowcount
+
         return rows
