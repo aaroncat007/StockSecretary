@@ -36,7 +36,7 @@ class UserModel(dbModel):
 
     def UpdateUserName(self,dataDict):
         "更新使用者名稱"
-        queryStr = f"Update {self.TABLENAME} set name=? where userID=?;"
+        queryStr = f"Update {self.TABLENAME} set name=? where id=?;"
         data = (dataDict['name'],dataDict['id'])
         return self.repo.update_sql(queryStr,data)  
 

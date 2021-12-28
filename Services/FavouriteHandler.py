@@ -14,6 +14,7 @@ class FavouriteHandler(MessageHandler):
     COMMAND_GET_LIST = "GET_LIST"
     COMMAND_ADD_STOCK = "ADD_STOCK"
     COMMAND_REMOVE_STOCK = "REMOVE_STOCK"
+    COMMAND_HELP = "HELP"
     
     def __init__(self):
         super().__init__()
@@ -69,6 +70,11 @@ class FavouriteHandler(MessageHandler):
             stockStr = stockStr.strip()
 
             response = self.REMOVE_STOCK(userID,stockStr)
+            return response
+
+        elif  COMMAND == self.COMMAND_HELP:
+            "取得說明"
+            response = self.helpMessage()
             return response
         
         else:
@@ -144,3 +150,12 @@ class FavouriteHandler(MessageHandler):
             return f"股票代號 [{stockCode} - {_stock[2]}] 已成功移除我的喜愛"
         else :
             return f"股票代號 [{stockCode} - {_stock[2]}] 移除我的喜愛失敗"       
+
+
+    def helpMessage(self):
+        "使用說明"
+        return """
+*新增我的喜好: /addfav 股票代碼
+*移除我的喜好: /delfav 股票代碼
+*列出我的喜好清單: /listfav
+"""
