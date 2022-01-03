@@ -76,6 +76,14 @@ class SearchStockHandler(MessageHandler):
 發行日:{offerTime}
 """
 
+
+
+
+
+
+
+
+
         #正規式替換內容
         resultMessage = re.sub(r'{stockCode}',queryResult[1],resultMessage)
         resultMessage = re.sub(r'{stockName}',queryResult[2],resultMessage)

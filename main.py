@@ -42,6 +42,12 @@ def search_stock(message):
     searchStockHandler = SearchStockHandler()
     bot.reply_to(message,searchStockHandler.getMessage(message))
 
+# 查詢股票基本資訊
+def search_stock(message):
+    searchStockHandler = SearchStockHandler()
+    bot.reply_to(message,searchStockHandler.getMessage(message))
+
+
 # 說明股票基本資訊
 def help_search_stock(message):
     searchStockHandler = SearchStockHandler()
