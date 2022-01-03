@@ -16,7 +16,6 @@ class StockModel(dbModel):
         self.repo = SQLiteRepository()
         self.initTable()
 
-
     def getStockByCode(self,stockCode):
         """
         查詢股票資料(透過股票代碼)
@@ -60,7 +59,7 @@ class StockModel(dbModel):
         return self.repo.insert_many_sql(queryStr,dataArray)
 
     def initTable(self):
-         """
+        """
         初始化資料表
         stockCode:股票代碼
         stockName:股票名稱
@@ -80,14 +79,16 @@ class StockModel(dbModel):
                                                 ,industry text \
                                                 ,offerTime text \
                                                 ,memo text)') 
+       
     def getStockData_Now(self):
         #引用yahoo_fin套件並縮寫為si
         import yahoo_fin.stock_info as si
         #抓現價
         now = si.get_live_price(self.id)
         #回傳現價
-        return now
+        return self.repo.query_one_data(now)
     # 今日及時k線(nowvalue K LINE Method)
+
     def Get_todayK_line(self):
         #引用yfinance套件並縮寫為yf
         import yfinance as yf

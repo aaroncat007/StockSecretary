@@ -137,6 +137,8 @@ bot.register_message_handler(remove_myMonitor,commands=['delsm'])
 bot.register_message_handler(enable_myMonitor,commands=['ensm'])
 bot.register_message_handler(disable_myMonitor,commands=['dissm'])
 
+
+
 # 註冊一般文字事件
 # Handle all other messages with content_type 'text' (content_types defaults to ['text'])
 @bot.message_handler(func=lambda message: True)
