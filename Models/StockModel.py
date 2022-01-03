@@ -25,6 +25,26 @@ class StockModel(dbModel):
         """
         queryStr = f"select * from {self.TABLENAME} where stockCode=?"
         data = (stockCode,)
+        import pandas as pd
+        import numpy as np
+        allstock1 = pd.read_html('https://isin.twse.com.tw/isin/C_public.jsp?strMode=2',encoding='big5hkscs',header=0)
+        allstock1 = allstock1[0]
+        allstock1=allstock1[1:int(np.where(allstock1['有價證券代號及名稱'] == '上市認購(售)權證')[0])]
+        allstock1=allstock1.drop(['國際證券辨識號碼(ISIN Code)','CFICode','備註'],axis = 1)
+        allstock1['symbol']=allstock1['有價證券代號及名稱'].str.split('　').str.get(0)
+        allstock1['Name']=allstock1['有價證券代號及名稱'].str.split('　').str.get(1)
+        del allstock1['有價證券代號及名稱']
+        allstock = pd.read_html('https://isin.twse.com.tw/isin/C_public.jsp?strMode=4',encoding='big5hkscs',header=0)
+        allstock = allstock[0]
+        allstock=allstock[int(np.where(allstock['有價證券代號及名稱'] == '股票')[0])+1:int(np.where(allstock['有價證券代號及名稱'] == '特別股')[0])]
+        allstock=allstock.drop(['國際證券辨識號碼(ISIN Code)','CFICode','備註'],axis = 1)
+        allstock['symbol']=allstock['有價證券代號及名稱'].str.split('　').str.get(0)
+        allstock['Name']=allstock['有價證券代號及名稱'].str.split('　').str.get(1)
+        del allstock['有價證券代號及名稱']
+        allstock1=pd.concat((allstock1,allstock),axis=0)
+        allstock1.reset_index(inplace=True, drop=False)
+        data=allstock1[allstock1['symbol']==str(stockCode) ]
+
         return self.repo.query_one_sql(queryStr,data)
 
     def getStockByMarket(self,marketStr):
@@ -36,6 +56,25 @@ class StockModel(dbModel):
         """
         queryStr = f"select * from {self.TABLENAME} where marketStr=?"
         data = (marketStr,)
+        import pandas as pd
+        import numpy as np
+        allstock1 = pd.read_html('https://isin.twse.com.tw/isin/C_public.jsp?strMode=2',encoding='big5hkscs',header=0)
+        allstock1 = allstock1[0]
+        allstock1=allstock1[1:int(np.where(allstock1['有價證券代號及名稱'] == '上市認購(售)權證')[0])]
+        allstock1=allstock1.drop(['國際證券辨識號碼(ISIN Code)','CFICode','備註'],axis = 1)
+        allstock1['symbol']=allstock1['有價證券代號及名稱'].str.split('　').str.get(0)
+        allstock1['Name']=allstock1['有價證券代號及名稱'].str.split('　').str.get(1)
+        del allstock1['有價證券代號及名稱']
+        allstock = pd.read_html('https://isin.twse.com.tw/isin/C_public.jsp?strMode=4',encoding='big5hkscs',header=0)
+        allstock = allstock[0]
+        allstock=allstock[int(np.where(allstock['有價證券代號及名稱'] == '股票')[0])+1:int(np.where(allstock['有價證券代號及名稱'] == '特別股')[0])]
+        allstock=allstock.drop(['國際證券辨識號碼(ISIN Code)','CFICode','備註'],axis = 1)
+        allstock['symbol']=allstock['有價證券代號及名稱'].str.split('　').str.get(0)
+        allstock['Name']=allstock['有價證券代號及名稱'].str.split('　').str.get(1)
+        del allstock['有價證券代號及名稱']
+        allstock1=pd.concat((allstock1,allstock),axis=0)
+        allstock1.reset_index(inplace=True, drop=False)
+        data=allstock1[allstock1['市場別']==str(marketStr) ]
         return self.repo.query_all_sql(queryStr,data)
 
     def getStockByIndustry(self,industryStr):
@@ -47,6 +86,26 @@ class StockModel(dbModel):
         """
         queryStr = f"select * from {self.TABLENAME} where industryStr=?"
         data = (industryStr,)
+        import pandas as pd
+        import numpy as np
+        allstock1 = pd.read_html('https://isin.twse.com.tw/isin/C_public.jsp?strMode=2',encoding='big5hkscs',header=0)
+        allstock1 = allstock1[0]
+        allstock1=allstock1[1:int(np.where(allstock1['有價證券代號及名稱'] == '上市認購(售)權證')[0])]
+        allstock1=allstock1.drop(['國際證券辨識號碼(ISIN Code)','CFICode','備註'],axis = 1)
+        allstock1['symbol']=allstock1['有價證券代號及名稱'].str.split('　').str.get(0)
+        allstock1['Name']=allstock1['有價證券代號及名稱'].str.split('　').str.get(1)
+        del allstock1['有價證券代號及名稱']
+        allstock = pd.read_html('https://isin.twse.com.tw/isin/C_public.jsp?strMode=4',encoding='big5hkscs',header=0)
+        allstock = allstock[0]
+        allstock=allstock[int(np.where(allstock['有價證券代號及名稱'] == '股票')[0])+1:int(np.where(allstock['有價證券代號及名稱'] == '特別股')[0])]
+        allstock=allstock.drop(['國際證券辨識號碼(ISIN Code)','CFICode','備註'],axis = 1)
+        allstock['symbol']=allstock['有價證券代號及名稱'].str.split('　').str.get(0)
+        allstock['Name']=allstock['有價證券代號及名稱'].str.split('　').str.get(1)
+        del allstock['有價證券代號及名稱']
+        allstock1=pd.concat((allstock1,allstock),axis=0)
+        allstock1.reset_index(inplace=True, drop=False)
+        data=allstock1[allstock1['產業別']==str(industryStr) ]
+        return self.repo.query_all_sql(queryStr,data)
         return self.repo.query_all_sql(queryStr,data)
 
     def AddStock(self,dataArray):
