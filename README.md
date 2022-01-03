@@ -2,7 +2,7 @@
 
 ## Contents
 
-Bot is [t.me/StockSecretary_bot](t.me/StockSecretary_bot) .   
+Bot is [t.me/StockSecretary_bot](https://t.me/StockSecretary_bot) .   
 HTTP API Token is Written in ``main.py`` API_TOKEN variable
 ## Getting started
 
