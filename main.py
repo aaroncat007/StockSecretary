@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
+from numpy import False_
+from numpy.lib.type_check import common_type
 import telebot
 from telebot import types
 
@@ -16,13 +18,17 @@ bot = telebot.TeleBot(API_TOKEN)
 
 
 # 註冊 Markup
-markup = types.ReplyKeyboardMarkup(resize_keyboard=True,one_time_keyboard=True)
+markup = types.ReplyKeyboardMarkup(resize_keyboard=True,one_time_keyboard=False)
 itembtn1 = types.KeyboardButton('/helpstock')
 itembtn2 = types.KeyboardButton('/helpfav')
 itembtn3 = types.KeyboardButton('/helpsm')
-markup.row(itembtn1, itembtn2, itembtn3)
+itembtn4 = types.KeyboardButton('/addfav')
+itembtn5 = types.KeyboardButton('/delfav')
+itembtn6 = types.KeyboardButton('/listfav')
 
-# 初始提示訊息
+markup.row(itembtn1, itembtn2, itembtn3)
+markup.row(itembtn4, itembtn5, itembtn6)
+            # 初始提示訊息
 def start_executor(message):
     helpHandler = HelpHandler()
 
@@ -117,7 +123,9 @@ def help_myMonitor(message):
     smHandler = StockMonitorHandler()
     bot.reply_to(message,smHandler.getMessage(message,smHandler.COMMAND_HELP))
     pass
-
+def query_stock_now(message):
+    searchStockHandler = SearchStockHandler()
+    bot.reply_to(message,searchStockHandler.getMessage(message,searchStockHandler.COMMAND_GETNOW))
 # 註冊指令事件
 # 一般查詢
 bot.register_message_handler(start_executor, commands=['start','help'])
@@ -137,8 +145,8 @@ bot.register_message_handler(remove_myMonitor,commands=['delsm'])
 bot.register_message_handler(enable_myMonitor,commands=['ensm'])
 bot.register_message_handler(disable_myMonitor,commands=['dissm'])
 
-
-
+bot.register_message_handler(query_stock_now,commands=['q'])
+#
 # 註冊一般文字事件
 # Handle all other messages with content_type 'text' (content_types defaults to ['text'])
 @bot.message_handler(func=lambda message: True)
