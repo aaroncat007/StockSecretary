@@ -3,7 +3,7 @@
 
 from Repository.SQLiteRepository import SQLiteRepository
 from Models.dbModel import dbModel
-import datetime
+from datetime import datetime
 import yahoo_fin.stock_info as si
 import yfinance as yf
 
@@ -24,7 +24,12 @@ class StockMarketModel(dbModel):
         toclos=float(yf.download(id,
                     period='1d',
                     interval='5m').iloc[-1:]['Close'])
-        yes=si.get_data(id).iloc[-1:]
+        if int(datetime.now().strftime('%H'))>13:
+            yes=si.get_data(id).iloc[-2:-1]
+        elif int(datetime.now().strftime('%H'))<9:
+            yes=si.get_data(id).iloc[-2:-1]
+        else:
+            yes=si.get_data(id).iloc[-1:]
         yeclos=float(yes['close'])
         yesop=float(yes['open']) 
         yeshg=float(yes['high']) 
