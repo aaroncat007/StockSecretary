@@ -1,9 +1,8 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
-import schedule  
-import time 
-import threading
+from numpy import False_
+from numpy.lib.type_check import common_type
 import telebot
 from telebot import types
 
@@ -13,46 +12,10 @@ from Services.SearchStockHandler import SearchStockHandler
 from Services.FavouriteHandler import FavouriteHandler
 from Services.StockMonitorHandler import StockMonitorHandler
 
-from Jobs.FetchStockPriceJob import FetchStockPriceJob
-
 API_TOKEN = '5042070567:AAHzhio9A3c9WF398wmzGbPgy0pj2q-_xPw'
 
 bot = telebot.TeleBot(API_TOKEN)
 
-# 註冊排程
-# 參考
-# https://schedule.readthedocs.io/en/stable/examples.html
-
-#每10秒執行一次
-fspJob = FetchStockPriceJob()
-schedule.every(10).seconds.do(fspJob.run)
-
-def run_continuously(interval=1):
-    """Continuously run, while executing pending jobs at each
-    elapsed time interval.
-    @return cease_continuous_run: threading. Event which can
-    be set to cease continuous run. Please note that it is
-    *intended behavior that run_continuously() does not run
-    missed jobs*. For example, if you've registered a job that
-    should run every minute and you set a continuous run
-    interval of one hour then your job won't be run 60 times
-    at each interval but only once.
-    """
-    cease_continuous_run = threading.Event()
-
-    class ScheduleThread(threading.Thread):
-        @classmethod
-        def run(cls):
-            while not cease_continuous_run.is_set():
-                schedule.run_pending()
-                time.sleep(interval)
-
-    continuous_thread = ScheduleThread()
-    continuous_thread.start()
-    return cease_continuous_run
-
-# Start the background thread
-stop_run_continuously = run_continuously()
 
 # 註冊 Markup
 markup = types.ReplyKeyboardMarkup(resize_keyboard=True,one_time_keyboard=False)
@@ -191,11 +154,3 @@ def echo_message(message):
     bot.reply_to(message, message.text)
 
 bot.infinity_polling()
-
-try:
-    while 1:
-        time.sleep(.1)
-except KeyboardInterrupt:
-    print("attempting to close threads.")
-    # Stop the background thread
-    stop_run_continuously.set()

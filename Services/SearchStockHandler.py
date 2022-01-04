@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
+from numpy import round_
 from Services.MessageHandler import MessageHandler
 from Models.StockModel import StockModel
 import re
@@ -10,6 +11,7 @@ class SearchStockHandler(MessageHandler):
 
     COMMAND_HELP = "HELP"
     COMMAND_QUERY = "QUERY"
+    COMMAND_GETNOW = "GETNOW"
 
 
     def __init__(self):
@@ -42,7 +44,13 @@ class SearchStockHandler(MessageHandler):
             "取得說明"
             response = self.helpMessage()
             return response
-        
+
+        elif  COMMAND == self.COMMAND_GETNOW:
+            "取得及時"
+            stockStr = message.text
+            response = self.QueryStockNOW(stockStr)
+            return response
+
         else:
             return f"未定義指令:{COMMAND}"
 
@@ -74,14 +82,8 @@ class SearchStockHandler(MessageHandler):
 證券別:{issuetype}
 產業別:{industry}
 發行日:{offerTime}
+
 """
-
-
-
-
-
-
-
 
 
         #正規式替換內容
@@ -91,7 +93,7 @@ class SearchStockHandler(MessageHandler):
         resultMessage = re.sub(r'{issuetype}',queryResult[4],resultMessage)
         resultMessage = re.sub(r'{industry}',queryResult[5],resultMessage)
         resultMessage = re.sub(r'{offerTime}',queryResult[6],resultMessage)
-
+        
         return resultMessage
 
 
@@ -102,3 +104,33 @@ class SearchStockHandler(MessageHandler):
 範例: 當查詢東泥資訊
 /stock 1110
 """
+
+    def QueryStockNOW(self,stockStr):
+        """
+        查詢股票資訊
+        :param stockStr:股票代碼
+        """
+        # 進來的格式會是 /stock 股票代碼
+        # 移除命令並去除空白
+        stockStr = stockStr.replace('/q','')
+        stockStr = stockStr.strip()
+
+        if stockStr == "":
+            return f"請輸入股票代碼"
+
+        # 查詢資料庫
+        queryResult = self.stockModel.getStockData_Now(stockStr)
+
+        if queryResult == None :
+            return f"查無股票資訊:{stockStr}"
+        
+        #回覆訊息範本
+        resultMessage = """
+股票及時:{stockprice}
+
+
+"""
+#正規式替換內容
+        resultMessage = re.sub(r'{stockprice}',str(round(queryResult,2)),resultMessage)
+
+        return resultMessage

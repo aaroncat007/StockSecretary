@@ -19,4 +19,3 @@ class MessageHandler(metaclass=ABCMeta):
     def getMessage(self):
         "取得回應訊息"
         pass
-    

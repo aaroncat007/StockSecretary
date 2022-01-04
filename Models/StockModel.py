@@ -80,13 +80,16 @@ class StockModel(dbModel):
                                                 ,offerTime text \
                                                 ,memo text)') 
        
-    def getStockData_Now(self):
+    def getStockData_Now(self,stockCode):
         #引用yahoo_fin套件並縮寫為si
+        stockCode= stockCode+".TW"
         import yahoo_fin.stock_info as si
         #抓現價
-        now = si.get_live_price(self.id)
+        now = si.get_live_price(stockCode)
         #回傳現價
-        return self.repo.query_one_data(now)
+        return now
+        #回傳及時數據
+
     # 今日及時k線(nowvalue K LINE Method)
 
     def Get_todayK_line(self):
@@ -193,7 +196,7 @@ class StockModel(dbModel):
         # 回傳 盤後資料
         return data
     # 找大股東資料
-    def get_findbig(self):
+    def get_findbig(self,stockCode):
         # 引用pandas套件並縮寫為pd
         import pandas as pd
         # 引用urllib套件並縮寫為req
@@ -201,7 +204,7 @@ class StockModel(dbModel):
         # 引用bs4套件並縮寫為bs
         from bs4 import BeautifulSoup as bs
         # 設定爬蟲網址
-        url = "https://norway.twsthr.info/StockHolders.aspx?stock=2330"
+        url = f"https://norway.twsthr.info/StockHolders.aspx?stock={stockCode}"
         # 爬蟲
         # 要記得設定headers
         request = req.Request(url, headers={
@@ -247,4 +250,3 @@ class StockModel(dbModel):
         result = pd.DataFrame(result[1:],columns=result[0])
         #回傳最後得到的資料
         return result
-
