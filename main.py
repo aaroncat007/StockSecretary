@@ -25,7 +25,7 @@ itembtn3 = types.KeyboardButton('/helpsm')
 itembtn4 = types.KeyboardButton('/addfav')
 itembtn5 = types.KeyboardButton('/delfav')
 itembtn6 = types.KeyboardButton('/listfav')
-
+#按鈕
 markup.row(itembtn1, itembtn2, itembtn3)
 markup.row(itembtn4, itembtn5, itembtn6)
             # 初始提示訊息
@@ -123,9 +123,26 @@ def help_myMonitor(message):
     smHandler = StockMonitorHandler()
     bot.reply_to(message,smHandler.getMessage(message,smHandler.COMMAND_HELP))
     pass
+
+#及時股票 (新增)
 def query_stock_now(message):
     searchStockHandler = SearchStockHandler()
     bot.reply_to(message,searchStockHandler.getMessage(message,searchStockHandler.COMMAND_GETNOW))
+    pass
+
+#大股東資料(新增)
+def query_stock_PE(message):
+    searchStockHandler = SearchStockHandler()
+    bot.reply_to(message,searchStockHandler.getMessage(message,searchStockHandler.COMMAND_GETPE))
+
+#k值股票 (新增)
+def query_stock_K(message):
+    searchStockHandler = SearchStockHandler()
+    bot.reply_to(message,searchStockHandler.getMessage(message,searchStockHandler.COMMAND_GETK))
+    pass
+
+
+
 # 註冊指令事件
 # 一般查詢
 bot.register_message_handler(start_executor, commands=['start','help'])
@@ -144,8 +161,11 @@ bot.register_message_handler(add_myMonitor,commands=['addsm'])
 bot.register_message_handler(remove_myMonitor,commands=['delsm'])
 bot.register_message_handler(enable_myMonitor,commands=['ensm'])
 bot.register_message_handler(disable_myMonitor,commands=['dissm'])
-
+#(新增)
 bot.register_message_handler(query_stock_now,commands=['q'])
+bot.register_message_handler(query_stock_PE,commands=['PE'])
+bot.register_message_handler(query_stock_K,commands=['K'])
+
 #
 # 註冊一般文字事件
 # Handle all other messages with content_type 'text' (content_types defaults to ['text'])
