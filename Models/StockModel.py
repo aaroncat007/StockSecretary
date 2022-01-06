@@ -93,14 +93,16 @@ class StockModel(dbModel):
         #回傳及時數據
 
     # 今日及時k線(nowvalue K LINE Method)
-
     def Get_todayK_line(self,stockCode):
         #引用yfinance套件並縮寫為yf
         import yfinance as yf
         #引用matplot套件並縮寫為plt
         import matplotlib.pyplot as plt
+        from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+        import io
         #引用mpl_finance套件並縮寫為mpf
         import mpl_finance as mpf
+        import numpy as np
         # 下載今日數據
         # 時間範圍1天
         # 時間頻率5分鐘
@@ -116,6 +118,7 @@ class StockModel(dbModel):
             formatter=lambda x: x.strftime('%H-%M-%S'))
         # 空白畫布
         fig = plt.figure(figsize=(24, 15))
+        canvas = FigureCanvas(fig)
         # 空白畫布上半部大小
         ax0 = fig.add_axes([0.08, 0.3, 0.9, 0.6])
         # 空白畫布下半部大小
@@ -135,9 +138,15 @@ class StockModel(dbModel):
         #設定畫布下半部X軸上的資訊
         ax1.set_xticklabels(data.index[::10])
         # 回傳數據及圖片
-        path=f'./K line Jpg/{stockCode}.jpg'
-        plt.savefig(path)
-        return data,path
+        canvas.draw()
+        #image = np.frombuffer(canvas.tostring_rgb(), dtype='uint8')
+        buf = io.BytesIO()
+        plt.savefig(buf, format = 'png')
+        buf.seek(0)
+        #path=f'./K line Jpg/{stockCode}.jpg'
+        #plt.savefig(path)
+        return buf
+
     # 某個月的日本益比
     def Geronth_dateper(self, date,stockCode):
         # 引用pandas套件並縮寫為pd
@@ -148,6 +157,7 @@ class StockModel(dbModel):
         from bs4 import BeautifulSoup as bs
         # 設定爬蟲網址
         url = f"https://www.twse.com.tw/exchangeReport/BWIBBU?response=html&date={date}&stockNo={stockCode}"
+        print(url)
         # 爬蟲
         # 要記得設定headers
         request = req.Request(url, headers={
@@ -192,6 +202,7 @@ class StockModel(dbModel):
         result = pd.DataFrame(result[1:], columns=result[0])
         #回傳最後得到的資料
         return result
+
     # 盤後資料
     def get_ahd(self):
         # 引用 yahoo_fin 套件並縮寫為 si
@@ -257,7 +268,7 @@ class StockModel(dbModel):
         #回傳最後得到的資料
         return result
 
-    def ger_value(stockCodelist):
+    def ger_value(self,stockCodelist):
         import numpy as np  # 匯入numpy，並重命名為np
         import yfinance as yf
         import pandas as pd
@@ -290,4 +301,3 @@ class StockModel(dbModel):
         Olv.columns = [0]
         Sp = Sp.append(Olv)
         return Sp
-    ger_value(['1101', '1102'])

@@ -130,7 +130,7 @@ def query_stock_now(message):
     bot.reply_to(message,searchStockHandler.getMessage(message,searchStockHandler.COMMAND_GETNOW))
     pass
 
-#大股東資料(新增)
+#日本益比資料(新增)
 def query_stock_PE(message):
     searchStockHandler = SearchStockHandler()
     bot.reply_to(message,searchStockHandler.getMessage(message,searchStockHandler.COMMAND_GETPE))
@@ -138,9 +138,19 @@ def query_stock_PE(message):
 #k值股票 (新增)
 def query_stock_K(message):
     searchStockHandler = SearchStockHandler()
-    bot.reply_to(message,searchStockHandler.getMessage(message,searchStockHandler.COMMAND_GETK))
+    response = searchStockHandler.getMessage(message,searchStockHandler.COMMAND_GETK)
+
+    #如果是圖片 則使用send_photo回傳
+    if response[0] == "img":
+        bot.send_photo(message.chat.id,response[1])
+    else:
+        bot.reply_to(message,response[1])
     pass
 
+#大股東資料
+def query_stock_big(message):
+    searchStockHandler = SearchStockHandler()
+    bot.reply_to(message,searchStockHandler.getMessage(message,searchStockHandler.COMMAND_GETBIG))
 
 
 # 註冊指令事件
@@ -165,6 +175,7 @@ bot.register_message_handler(disable_myMonitor,commands=['dissm'])
 bot.register_message_handler(query_stock_now,commands=['q'])
 bot.register_message_handler(query_stock_PE,commands=['PE'])
 bot.register_message_handler(query_stock_K,commands=['K'])
+bot.register_message_handler(query_stock_big,commands=['big'])
 
 #
 # 註冊一般文字事件
