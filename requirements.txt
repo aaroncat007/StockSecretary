@@ -4,3 +4,4 @@ pandas==1.3.5
 pyTelegramBotAPI==4.2.2
 yahoo-fin==0.8.9.1
 yfinance==0.1.68
+mpl_finance==0.10.1
