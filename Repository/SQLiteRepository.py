@@ -11,7 +11,7 @@ class SQLiteRepository(BaseRepository):
     def __init__(self):
         super().__init__()
         # 初始化資料庫連線
-        self.conn = sqlite3.connect('data.db')
+        self.conn = sqlite3.connect('data.db', check_same_thread=False)
 
     def getConn(self):
         "取得資料庫連線"

@@ -40,6 +40,12 @@ class UserModel(dbModel):
         data = (dataDict['name'],dataDict['id'])
         return self.repo.update_sql(queryStr,data)  
 
+    def getAllUser(self):
+        "取得所有使用者"
+        queryStr = f"select * from {self.TABLENAME} where 1=?"
+        data = (1,)
+        return self.repo.query_all_sql(queryStr,data)
+
     def initTable(self):
         "初始化資料表"
         conn = self.repo.getConn()

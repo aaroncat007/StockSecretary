@@ -151,30 +151,53 @@ class SearchStockHandler(MessageHandler):
             return f"查無股票資訊:{stockStr}"
 
         #其他指標
-        #col = [stockStr]
-        #otherResult = self.stockModel.ger_value(col)
+        otherResult = self.stockModel.get_single_value(stockStr)
+        #取出指定股票的值
+        targetStock = otherResult[otherResult['股票代碼']==stockStr]
 
-        #if otherResult == None :
-        #    return f"查無股票資訊:{stockStr}"
-
-        #print(otherResult)
+        if len(targetStock) <= 0 :
+            return f"查無股票資訊:{stockStr}"
 
         now = datetime.now()
         date_time = now.strftime("%Y/%m/%d %H:%M:%S")
-        
+
+        #整理格式
+        SpStr = round(otherResult["價差"][0],2)
+        if SpStr < 0 :
+            SpStr = f" ▼ {SpStr}"
+        elif SpStr > 0:
+            SpStr = f" ▲ {SpStr}"
+        else:
+            SpStr = f" ● {SpStr}"      
+
+        AmpStr = round(otherResult["漲跌幅"][0],2)
+        if AmpStr < 0 :
+            AmpStr = f" ▼ {AmpStr}"
+        elif AmpStr > 0:
+            AmpStr = f" ▲ {AmpStr}"
+        else:
+            AmpStr = f" ● {AmpStr}"             
+
         #回覆訊息範本
         resultMessage = """
 股票代號    {stockCode}
 股票名稱    {stockName}
 時間        {timestamp}
 即時價格    {stockprice}
-
+價差        {價差}
+漲跌幅      {漲跌幅}
+單量        {單量}
+總量        {總量}
 """
 #正規式替換內容
         resultMessage = re.sub(r'{stockCode}',StockResult[1],resultMessage)
         resultMessage = re.sub(r'{stockName}',StockResult[2],resultMessage)
         resultMessage = re.sub(r'{timestamp}',date_time,resultMessage)
         resultMessage = re.sub(r'{stockprice}',str(round(queryResult,2)),resultMessage)
+        resultMessage = re.sub(r'{價差}',SpStr,resultMessage)
+        resultMessage = re.sub(r'{漲跌幅}',AmpStr,resultMessage)
+        resultMessage = re.sub(r'{單量}',str(otherResult["單量"][0]),resultMessage)
+        resultMessage = re.sub(r'{總量}',str(otherResult["總量"][0]),resultMessage)
 
         return resultMessage
 

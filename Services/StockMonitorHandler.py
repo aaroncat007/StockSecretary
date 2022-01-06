@@ -179,9 +179,7 @@ class StockMonitorHandler(MessageHandler):
         userSMArray = self.smModel.getUserStockByStock(userID,_stockCode)
         if len(userSMArray) != 0:
             for userSM in userSMArray:
-                if userSM[3] == _smKind \
-                & userSM[4] ==_smCompare \
-                & userSM[5] == smStrArray[4]:
+                if userSM[3] == _smKind and userSM[4] ==_smCompare and userSM[5] == smStrArray[4]:
                     return f"股票代號 [{_stockCode}] 已經存在監測清單內"           
 
         #寫入資料庫

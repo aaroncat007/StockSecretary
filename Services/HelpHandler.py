@@ -77,6 +77,25 @@ class HelpHandler(MessageHandler):
         responseStr = "Hi " + userData[1] + ","
         responseStr += """\
 I am Stock Secretary Bot.
-目前我們還沒有提供服務!\
+很高興為您提供股市查詢服務!
+以下說明訊息希望可以讓您更簡便的使用服務：
+===============================
+*查詢股票資訊: /stock 股票代碼 
+*查詢大盤資訊: /TWStock
+-股票數據-
+    *查詢股票數據: /q 股票代碼
+    *查詢日本益比: /pe 股票代碼
+    *查詢K線圖: /k 股票代碼
+    *查詢大股東資料: /big 股票代碼
+-我的最愛-
+    *新增我的喜好: /addfav 股票代碼
+    *移除我的喜好: /delfav 股票代碼
+    *列出我的喜好清單: /listfav
+-股票監測-
+    *新增股票監測: /addsm 股票代碼 監測類型 監測比較 值
+    *移除股票監測: /delsm 監測代碼
+    *停用股票監測: /dissm 監測代碼
+    *啟用股票監測: /ensm 監測代碼
+    *列出我的監測清單: /listsm
 """
         return responseStr

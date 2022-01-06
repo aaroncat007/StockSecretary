@@ -1,9 +1,10 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
-from numpy import False_
-from numpy.lib.type_check import common_type
 import telebot
+import schedule
+import threading
+import time
 from telebot import types
 
 from Services.HelpHandler import HelpHandler
@@ -11,11 +12,53 @@ from Services.TWStockHandler import TWStockHandler
 from Services.SearchStockHandler import SearchStockHandler
 from Services.FavouriteHandler import FavouriteHandler
 from Services.StockMonitorHandler import StockMonitorHandler
+from Config.TelegramConfig import TelegramConfig
+from Jobs.FetchStockPriceJob import FetchStockPriceJob
+from Jobs.AhdJob import AhdJob
 
-API_TOKEN = '5042070567:AAHzhio9A3c9WF398wmzGbPgy0pj2q-_xPw'
+bot = telebot.TeleBot(TelegramConfig.API_TOKEN)
 
-bot = telebot.TeleBot(API_TOKEN)
+# 註冊排程
+# 參考
+# https://schedule.readthedocs.io/en/stable/examples.html
 
+#每30秒執行一次
+fspJob = FetchStockPriceJob()
+schedule.every(30).seconds.do(fspJob.run)
+
+#開盤日四點執行一次
+schedule.every().monday.at("16:00").do(AhdJob().run)
+schedule.every().tuesday.at("16:00").do(AhdJob().run)
+schedule.every().wednesday.at("16:00").do(AhdJob().run)
+schedule.every().thursday.at("16:00").do(AhdJob().run)
+schedule.every().friday.at("16:00").do(AhdJob().run)
+
+def run_continuously(interval=1):
+    """Continuously run, while executing pending jobs at each
+    elapsed time interval.
+    @return cease_continuous_run: threading. Event which can
+    be set to cease continuous run. Please note that it is
+    *intended behavior that run_continuously() does not run
+    missed jobs*. For example, if you've registered a job that
+    should run every minute and you set a continuous run
+    interval of one hour then your job won't be run 60 times
+    at each interval but only once.
+    """
+    cease_continuous_run = threading.Event()
+
+    class ScheduleThread(threading.Thread):
+        @classmethod
+        def run(cls):
+            while not cease_continuous_run.is_set():
+                schedule.run_pending()
+                time.sleep(interval)
+
+    continuous_thread = ScheduleThread()
+    continuous_thread.start()
+    return cease_continuous_run
+
+# Start the background thread
+stop_run_continuously = run_continuously()
 
 # 註冊 Markup
 markup = types.ReplyKeyboardMarkup(resize_keyboard=True,one_time_keyboard=False)
@@ -28,7 +71,7 @@ itembtn6 = types.KeyboardButton('/listfav')
 #按鈕
 markup.row(itembtn1, itembtn2, itembtn3)
 markup.row(itembtn4, itembtn5, itembtn6)
-            # 初始提示訊息
+# 初始提示訊息
 def start_executor(message):
     helpHandler = HelpHandler()
 
@@ -171,10 +214,10 @@ bot.register_message_handler(add_myMonitor,commands=['addsm'])
 bot.register_message_handler(remove_myMonitor,commands=['delsm'])
 bot.register_message_handler(enable_myMonitor,commands=['ensm'])
 bot.register_message_handler(disable_myMonitor,commands=['dissm'])
-#(新增)
+# 股票數據查詢
 bot.register_message_handler(query_stock_now,commands=['q'])
-bot.register_message_handler(query_stock_PE,commands=['PE'])
-bot.register_message_handler(query_stock_K,commands=['K'])
+bot.register_message_handler(query_stock_PE,commands=['pe'])
+bot.register_message_handler(query_stock_K,commands=['k'])
 bot.register_message_handler(query_stock_big,commands=['big'])
 
 #
@@ -185,3 +228,11 @@ def echo_message(message):
     bot.reply_to(message, message.text)
 
 bot.infinity_polling()
+
+try:
+    while 1:
+        time.sleep(.1)
+except KeyboardInterrupt:
+    print("attempting to close threads.")
+    # Stop the background thread
+    stop_run_continuously.set()

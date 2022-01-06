@@ -153,20 +153,11 @@ class FavouriteHandler(MessageHandler):
         if isSuccess == True:
             return f"股票代號 [{stockCode} - {_stock[2]}] 已成功移除我的喜愛"
         else :
-            return f"股票代號 [{stockCode} - {_stock[2]}] 移除我的喜愛失敗"      
-        
-        def helpMessage(self):
-         "使用說明"
-        return """
-*新增我的喜好: /addfav 股票代碼
-*移除我的喜好: /delfav 股票代碼
-*列出我的喜好清單: /listfav
-"""
-
+            return f"股票代號 [{stockCode} - {_stock[2]}] 移除我的喜愛失敗"
 
     
-        def helpMessage(self):
-         "使用說明"
+    def helpMessage(self):
+        "使用說明"
         return """
 *新增我的喜好: /addfav 股票代碼
 *移除我的喜好: /delfav 股票代碼
