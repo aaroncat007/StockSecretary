@@ -55,7 +55,7 @@ class FavouriteHandler(MessageHandler):
             # 進來的格式會是 /addstock 股票代碼
             # 移除命令並去除空白
             stockStr = message.text
-            stockStr = stockStr.replace('/addstock','')
+            stockStr = stockStr.replace('/addfav','')
             stockStr = stockStr.strip()
 
             response = self.ADD_STOCK(userID,stockStr)
@@ -70,7 +70,7 @@ class FavouriteHandler(MessageHandler):
             # 進來的格式會是 /delstock 股票代碼
             # 移除命令並去除空白
             stockStr = message.text
-            stockStr = stockStr.replace('/delstock','')
+            stockStr = stockStr.replace('/delfav','')
             stockStr = stockStr.strip()
 
             response = self.REMOVE_STOCK(userID,stockStr)
