@@ -4,6 +4,8 @@
 from Repository.SQLiteRepository import SQLiteRepository
 from Models.dbModel import dbModel
 import datetime
+import matplotlib
+import matplotlib.pyplot as plt
 
 # 股票模型
 class StockModel(dbModel):
@@ -92,7 +94,7 @@ class StockModel(dbModel):
 
     # 今日及時k線(nowvalue K LINE Method)
 
-    def Get_todayK_line(self):
+    def Get_todayK_line(self,stockCode):
         #引用yfinance套件並縮寫為yf
         import yfinance as yf
         #引用matplot套件並縮寫為plt
@@ -102,7 +104,8 @@ class StockModel(dbModel):
         # 下載今日數據
         # 時間範圍1天
         # 時間頻率5分鐘
-        data = yf.download(self.id,
+        stockCode=stockCode+'.TW'
+        data = yf.download(stockCode,
                            period='1d',
                            interval='5m')
         #因為抓下來的資料index本身就含有時間屬性
@@ -132,9 +135,11 @@ class StockModel(dbModel):
         #設定畫布下半部X軸上的資訊
         ax1.set_xticklabels(data.index[::10])
         # 回傳數據及圖片
-        return data, plt
+        path=f'./K line Jpg/{stockCode}.jpg'
+        plt.savefig(path)
+        return data,path
     # 某個月的日本益比
-    def Geronth_dateper(self, date):
+    def Geronth_dateper(self, date,stockCode):
         # 引用pandas套件並縮寫為pd
         import pandas as pd
         # 引用urllib套件並縮寫為req
@@ -142,7 +147,7 @@ class StockModel(dbModel):
         # 引用bs4套件並縮寫為bs
         from bs4 import BeautifulSoup as bs
         # 設定爬蟲網址
-        url = f"https://www.twse.com.tw/exchangeReport/BWIBBU?response=html&date={date}&stockNo={self.id[:4]}"
+        url = f"https://www.twse.com.tw/exchangeReport/BWIBBU?response=html&date={date}&stockNo={stockCode}"
         # 爬蟲
         # 要記得設定headers
         request = req.Request(url, headers={
@@ -195,6 +200,7 @@ class StockModel(dbModel):
         data = si.get_data(self.id)
         # 回傳 盤後資料
         return data
+    
     # 找大股東資料
     def get_findbig(self,stockCode):
         # 引用pandas套件並縮寫為pd
@@ -250,3 +256,38 @@ class StockModel(dbModel):
         result = pd.DataFrame(result[1:],columns=result[0])
         #回傳最後得到的資料
         return result
+
+    def ger_value(stockCodelist):
+        import numpy as np  # 匯入numpy，並重命名為np
+        import yfinance as yf
+        import pandas as pd
+        x = [i + '.TW' for i in stockCodelist]
+
+        yes = yf.download(x, period='2d').iloc[0]
+        tod = yf.download(x, period='1d',
+                      interval='5m')
+    # 價差
+        Sp = yes['Close']-tod['Close'].iloc[-1]
+    # 扙跌幅
+        Amp = (yes['Close']/tod['Close'].iloc[-1])-1
+    # 總量
+        Alv = tod['Volume']
+        Alv1 = []
+        for i in Alv.columns:
+            Alv1.append(sum(np.ravel(Alv[[i]])))
+    # 單量
+        Olv = tod['Volume'].iloc[-1]
+        Sp = pd.DataFrame(Sp)
+    # print(a)
+        Amp = pd.DataFrame(Amp)
+        Sp = Sp.append(Amp)
+        Alv1 = pd.DataFrame([Alv.columns, Alv1]).T
+        Alv1.index = list(Alv1[0])
+        Alv1[0] = Alv1[1]
+        del Alv1[1]
+        Sp = Sp.append(Alv1)
+        Olv = pd.DataFrame(Olv)
+        Olv.columns = [0]
+        Sp = Sp.append(Olv)
+        return Sp
+    ger_value(['1101', '1102'])
