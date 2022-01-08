@@ -118,3 +118,5 @@ class AhdJob():
         resultMessage = re.sub(r'{漲跌幅}',AmpStr,resultMessage)
         resultMessage = re.sub(r'{單量}',str(valueObj["單量"][0]),resultMessage)
         resultMessage = re.sub(r'{總量}',str(valueObj["總量"][0]),resultMessage)
+        
+        return resultMessage
