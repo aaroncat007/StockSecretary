@@ -208,7 +208,7 @@ class SearchStockHandler(MessageHandler):
         """
         # 進來的格式會是 /stock 股票代碼
         # 移除命令並去除空白
-        stockStr = stockStr.replace('/PE','')
+        stockStr = stockStr.replace('/pe','')
         stockStr = stockStr.strip()
 
         if stockStr == "":
@@ -264,7 +264,7 @@ class SearchStockHandler(MessageHandler):
         """
         # 進來的格式會是 /stock 股票代碼
         # 移除命令並去除空白
-        stockStr = stockStr.replace('/K','')
+        stockStr = stockStr.replace('/k','')
         stockStr = stockStr.strip()
         
         if stockStr == "":
